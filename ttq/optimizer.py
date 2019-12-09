@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-from numpy import pi
+from itertools import product
+from math import ceil, log
+import numpy as np
 from scipy.optimize import minimize
 from ttq import state_maker
 
@@ -19,6 +21,41 @@ _EXPECTED_VALUES = {
     '11': 0.1
 }
 
+CONF_TEMPLATE = {
+        'bound': [0, 2 * np.pi],
+        'expected_values': np.array([0.5, 0.2, 0.2, 0.1]),
+        'max_error': _MAX_ERROR,
+        'max_iter': None,
+        'n_states': _N,
+        'step': _STEP,
+        'x0': [0] * _PARAMS
+}
+
+
+def gen_expected_values(n):
+    return np.full(n, 1/n)
+
+
+def gen_expected_values_aux(n):
+    zeroes = np.zeros(n - n//2)
+    non_zeroes = np.full(n//2, 2/n)
+    return np.concatenate((zeroes, non_zeroes))
+
+
+def group_params(single_list):
+    result = []
+    for i in range(len(single_list), step=2):
+        result.append([single_list[i], single_list[i + 1]])
+    return result
+
+
+def ungroup_params(double_list):
+    result = []
+    for pair in double_list:
+        result.append(pair[0])
+        result.append(pair[1])
+    return result
+
 
 def state_maker_wrapper(params, conf):
     """
@@ -31,17 +68,28 @@ def state_maker_wrapper(params, conf):
     counts = state_maker.get_ensemble(
         *params, **{'N': n}
     )
-    errors = {}
-    # initialize missing keys
-    for k in expected_values.keys():
-        if k not in counts.keys():
-            counts[k] = 0
-        errors[k] = counts[k] / n
 
-    err = 0.0
-    for state, error in errors.items():
-        err += abs(expected_values[state] - error)
-    return err
+    size = len(expected_values)
+
+    # generator of binary strings
+    binary_states = [x for x in map(''.join, product('01', repeat=ceil(log(size, 2))))]
+
+    # initialize array with values of er
+    count_values = np.zeros(size)
+    # get keys of counts ('000', '001', ...)
+    count_keys = sorted(counts.keys())
+    for i in range(size):
+        k = binary_states[i]
+        # if key is found, use probability (count/n) of that count
+        if k in count_keys:
+            count_values[i] = counts.get(k) / n
+
+    # absolute value of each error
+    err_array = np.subtract(expected_values, count_values)
+    err_array = np.absolute(err_array)
+
+    # sum of all values
+    return np.sum(err_array)
 
 
 def constraint(params, conf):
@@ -78,13 +126,15 @@ def optimize(conf):
                    args=conf,
                    constraints=const,
                    options=options)
+
     return sol.x
 
 
 if __name__ == '__main__':
     conf = {
-        'bound': [0, 2 * pi],
-        'expected_values': _EXPECTED_VALUES,
+        'bound': [0, 2 * np.pi],
+        # 'expected_values': gen_expected_values(4),
+        'expected_values': np.array([0.5, 0.2, 0.2, 0.1]),
         'max_error': _MAX_ERROR,
         'max_iter': None,
         'n_states': _N,
