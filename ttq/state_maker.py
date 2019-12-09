@@ -1,5 +1,6 @@
 from qiskit import QuantumCircuit, Aer
 
+
 def state_maker(theta, ang0, ang1):
     '''
         Creates the circuit:
@@ -35,6 +36,7 @@ def state_maker(theta, ang0, ang1):
     circ.u3(*ang0, 0)
     
     return circ
+
 
 def get_ensemble(theta0, theta1, theta2, N=1024):
     '''
