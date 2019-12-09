@@ -52,17 +52,21 @@ def get_ensemble(theta0, theta1, theta2, N=1024):
          Where U3(x,y,z) is the general unitary described in
          https://community.qiskit.org/textbook/ch-gates/quantum-gates.html
          
-         This circuit can be used to get any desired two-qubit state. Note 
-         that the measurement is performed in the computational basis, resulting
+         This circuit can be used to get any desired two-qubit state: 
+         
+                    a0|00> + a1|01> + a2|10> + a3|11>
+                    
+         except for the phase factor in each coeficient. Note that the
+         measurement is performed in the computational basis, resulting
          in a probability distribution of the involved superposed states.
          
-         This means, that with this function you can get any desired probability
-         distribution of the states |00>,|01>,|10>,|11>.
+         This means, that with this function you can get any desired
+         probability distribution of the measurements '00', '01', '10' and '11'.
          
          Args:
-            theta: float parameter in range [0, 2pi)
-            ang0: arry of form [t1, t2, t3], each value is in range [0, 2pi)
-            ang1: arry of form [t1, t2, t3], each value is in range [0, 2pi)
+            theta0: float parameter in range [0, 2pi)
+            theta1: float parameter in range [0, 2pi)
+            theta2: float parameter in range [0, 2pi)
             N: integer number of shots for the measurements.
             
          Returns:
