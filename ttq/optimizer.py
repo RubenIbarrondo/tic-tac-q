@@ -25,6 +25,7 @@ EXPECTED_VALUES = {
 
 
 def state_maker_wrapper(params):
+    global EXPECTED_VALUES
     counts = state_maker.get_ensemble(
         *params, **{'N': N}
     )
