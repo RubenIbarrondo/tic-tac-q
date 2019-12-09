@@ -38,7 +38,7 @@ def state_maker(theta, ang0, ang1):
 
 def get_ensemble(theta, ang0, ang1, N=1024):
     '''
-        Measures the output of the circuit:
+        Simulates (qasm_simulator) the measures the output of the circuit:
          
                 ┌───────────────┐     ┌───────────┐┌─┐   
         q_0: |0>┤ U3(theta,0,0) ├──■──┤ U3(ang0)  ├┤M├───
