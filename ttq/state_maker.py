@@ -1,4 +1,4 @@
-from qiskit import QuantumCircuit, Aer
+from qiskit import QuantumCircuit, Aer, execute
 
 
 def state_maker(theta, ang0, ang1):
@@ -28,7 +28,7 @@ def state_maker(theta, ang0, ang1):
             circ: QuantumCircuit according to the given arguments
          
     '''
-    circ = QuantumCircuit(2,2)
+    circ = QuantumCircuit(2, 2)
 
     circ.u3(theta, 0, 0, 0)
     circ.cx(0, 1)
@@ -81,7 +81,7 @@ def get_ensemble(theta0, theta1, theta2, N=1024):
     circuit.measure(0,0)
     circuit.measure(1,1)
     simulator = Aer.get_backend('qasm_simulator')
-    result = execute(circuit, backend = simulator, shots = N).result()
+    result = execute(circuit, backend=simulator, shots=N).result()
     counts = result.get_counts()
     
     return counts
