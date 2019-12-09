@@ -21,7 +21,10 @@ _EXPECTED_VALUES = {
 
 
 def state_maker_wrapper(params, conf):
-
+    """
+    Wrapper to enable optimization of state_maker.get_ensemble.
+    It aggregates the error instead of returning the error of each state individually.
+    """
     expected_values = conf.get('expected_values')
     n = conf.get('n_states')
 
@@ -42,6 +45,9 @@ def state_maker_wrapper(params, conf):
 
 
 def constraint(params, conf):
+    """
+    Constraint function of the
+    """
     max_error = conf.get('max_error')
     err = state_maker_wrapper(params, conf)
     return 1.0 - err - max_error
@@ -49,6 +55,7 @@ def constraint(params, conf):
 
 def optimize(conf):
     bound = conf.get('bound')
+    max_iter = conf.get('max_iter')
     step = conf.get('step')
     x0 = conf.get('x0')
 
@@ -61,10 +68,16 @@ def optimize(conf):
         'fun': constraint,
         'args': [conf]
     }]
-
-    sol = minimize(state_maker_wrapper, x0,
-                   method='SLSQP', bounds=bounds, args=conf,
-                   constraints=const, options={'eps': step})
+    options = {'eps': step}
+    if max_iter is not None:
+        options['maxiter'] = int(max_iter)
+    sol = minimize(state_maker_wrapper,
+                   x0,
+                   method='SLSQP',
+                   bounds=bounds,
+                   args=conf,
+                   constraints=const,
+                   options=options)
     return sol.x
 
 
@@ -73,6 +86,7 @@ if __name__ == '__main__':
         'bound': [0, 2 * pi],
         'expected_values': _EXPECTED_VALUES,
         'max_error': _MAX_ERROR,
+        'max_iter': None,
         'n_states': _N,
         'step': _STEP,
         'x0': [0] * _PARAMS
