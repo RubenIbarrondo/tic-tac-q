@@ -94,7 +94,7 @@ def state_maker_wrapper(params, conf):
 
 def constraint(params, conf):
     """
-    Constraint function of the
+    Constraint function of the optimization
     """
     max_error = conf.get('max_error')
     err = state_maker_wrapper(params, conf)
@@ -102,6 +102,19 @@ def constraint(params, conf):
 
 
 def optimize(conf):
+    """
+    Optimization function
+    @param conf: contains the following parameters
+        'bound': [<min_val>, <max_val>],
+        'expected_values': np.array([<expected_values>]),
+        'max_error': <max_error>,
+        'max_iter': <None or maximum_number_of_iterations],
+        'n_states': <number of states, usually 1024>,
+        'step': <optimization_step (e.g. 0.1)>,
+        'x0': [<initial_version_of_params>]
+    }
+    @return [<optimal_values>]
+    """
     bound = conf.get('bound')
     max_iter = conf.get('max_iter')
     step = conf.get('step')
@@ -126,7 +139,6 @@ def optimize(conf):
                    args=conf,
                    constraints=const,
                    options=options)
-
     return sol.x
 
 
