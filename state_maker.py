@@ -70,13 +70,14 @@ def get_ensemble(theta0, theta1, theta2, N=1024):
             N: integer number of shots for the measurements.
             
          Returns:
-            circ: QuantumCircuit according to the given arguments
+            counts: dict object with the states as keys and counts as values. e.g {'00': 621, '11': 403}
          
     '''
 
     circuit = state_maker(theta0, [theta1, 0, 0], [theta2, 0, 0])
     
-    circuit.measure(2,2)
+    circuit.measure(0,0)
+    circuit.measure(1,1)
     simulator = Aer.get_backend('qasm_simulator')
     result = execute(circuit, backend = simulator, shots = N).result()
     counts = result.get_counts()
