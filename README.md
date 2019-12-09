@@ -17,5 +17,7 @@ Our fist goal was to get a quantum circuit that could get any desired state as a
 
 For the proposed problem we need 9-qubit states (one for each cell in the Tic-Tac-Toe board). The circuit that can get any desired state is shown bellow for a 4-qubit circuit.
 
+![alt text](https://github.com/mikelsr/tic-tac-q/blob/master/media/State_maker_4-qubit.png "4-qubit Quantum Circuit to generate a desired quantum state (only the module of the amplitudes are selected).")
+
 
 
