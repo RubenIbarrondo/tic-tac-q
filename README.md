@@ -13,13 +13,14 @@ PRA publication: https://journals.aps.org/pra/abstract/10.1103/PhysRevA.98.06232
 
 ## Initial approach
 
-Our fist goal was to get a quantum circuit that could get any desired state as a function of some tunable parameters. As we are only interested in the measuring probabilities we only search states that differ in the amplitudes of the computational basis states, that is we dont need to fit the relative phases of the states.
+Our fist goal was to get a quantum circuit that could get any desired state as a function of some tunable parameters. As we are only interested in the probabilities of measuring each state we only search states that differ in the absolute value of the amplitudes (of the computational basis states), that is we don't need to fit the relative phases of the states.
 
 For the proposed problem we need 9-qubit states (one for each cell in the Tic-Tac-Toe board). The circuit that can get any desired state is shown bellow for a 4-qubit circuit.
 
 ![alt text](https://github.com/mikelsr/tic-tac-q/blob/master/media/State_maker_4-qubit.png "4-qubit Quantum Circuit to generate a desired quantum state (only the module of the amplitudes are selected).")
 
-Where the unitary transformation are described as
+Where the unitary transformations are described as
 
-![alt text](https://github.com/mikelsr/tic-tac-q/blob/master/media/U3_thetaj.png "Unitary quantum gate definition.")
+<img src="https://github.com/mikelsr/tic-tac-q/blob/master/media/U3_thetaj.png" width="200"/>
 
+the parameters of those gates are the ones to be tuned by our optimization algorithm.
