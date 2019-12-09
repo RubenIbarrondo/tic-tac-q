@@ -19,5 +19,7 @@ For the proposed problem we need 9-qubit states (one for each cell in the Tic-Ta
 
 ![alt text](https://github.com/mikelsr/tic-tac-q/blob/master/media/State_maker_4-qubit.png "4-qubit Quantum Circuit to generate a desired quantum state (only the module of the amplitudes are selected).")
 
+Where the unitary transformation are described as
 
+![alt text](https://github.com/mikelsr/tic-tac-q/blob/master/media/U3_thetaj.png "Unitary quantum gate definition.")
 
