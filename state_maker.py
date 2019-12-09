@@ -36,18 +36,18 @@ def state_maker(theta, ang0, ang1):
     
     return circ
 
-def get_ensemble(theta, ang0, ang1, N=1024):
+def get_ensemble(theta0, theta1, theta2, N=1024):
     '''
         Simulates (qasm_simulator) the measures the output of the circuit:
          
-                ┌───────────────┐     ┌───────────┐┌─┐   
-        q_0: |0>┤ U3(theta,0,0) ├──■──┤ U3(ang0)  ├┤M├───
-                └───────────────┘┌─┴─┐├───────────┤└╥┘┌─┐
-        q_1: |0>─────────────────┤ X ├┤ U3(ang1)  ├─╫─┤M├
-                                 └───┘└───────────┘ ║ └╥┘
-         c_0: 0 ════════════════════════════════════╩══╬═
-                                                       ║ 
-         c_1: 0 ═══════════════════════════════════════╩═
+                ┌────────────────┐     ┌─────────────────┐┌─┐   
+        q_0: |0>┤ U3(theta0,0,0) ├──■──┤ U3(theta1,0,0)  ├┤M├───
+                └────────────────┘┌─┴─┐├─────────────────┤└╥┘┌─┐
+        q_1: |0>──────────────────┤ X ├┤ U3(theta2,0,0)  ├─╫─┤M├
+                                  └───┘└─────────────────┘ ║ └╥┘
+         c_0: 0 ═══════════════════════════════════════════╩══╬═
+                                                              ║ 
+         c_1: 0 ══════════════════════════════════════════════╩═
          
          Where U3(x,y,z) is the general unitary described in
          https://community.qiskit.org/textbook/ch-gates/quantum-gates.html
@@ -70,7 +70,7 @@ def get_ensemble(theta, ang0, ang1, N=1024):
          
     '''
 
-    circuit = state_maker(theta, ang0, ang1)
+    circuit = state_maker(theta0, [theta1, 0, 0], [theta2, 0, 0])
     
     circuit.measure(2,2)
     simulator = Aer.get_backend('qasm_simulator')
