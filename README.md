@@ -1,6 +1,6 @@
 # Tic Tac Q
 
-Inferring the rules of Tic-Tac-Toe with a Quantum Born Machine (Issue \#17).
+Inferring the rules of Tic-Tac-Toe with a Quantum Born Machine ([Issue \#17](https://github.com/qiskit-community/qiskit-hackathon-bilbao-19/issues/17)).
 
 ## Objective
 
