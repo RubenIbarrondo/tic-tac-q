@@ -1,0 +1,10 @@
+file: 'result_1.txt'
+	total: 1024 wins: 368 (35.9375%) loses: 656 (64.0625%)
+file: 'result_2.txt'
+	total: 1024 wins: 262 (25.5859375%) loses: 762 (74.4140625%)
+file: 'result_3.txt'
+	total: 1024 wins: 293 (28.61328125%) loses: 731 (71.38671875%)
+file: 'result_4.txt'
+	total: 1024 wins: 422 (41.2109375%) loses: 602 (58.7890625%)
+file: 'result_5.txt'
+	total: 1024 wins: 407 (39.74609375%) loses: 617 (60.25390625%)
