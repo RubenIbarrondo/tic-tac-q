@@ -87,10 +87,37 @@ def get_ensemble(theta0, theta1, theta2, N=1024):
 
 
 def state_maker_Q(thetas, Q=2):
+        """
+        Creates the circuit:
+        
+                ┌────────────────────────┐                               ┌───┐ ░ ┌───────────────────────┐
+        q_0: |0>┤ U3(thetas[0][0]]],0,0) ├──■────────────────────────────┤ X ├─░─┤ U3(thetas[1][0]],0,0) ├
+                └────────────────────────┘┌─┴─┐┌───────────────────────┐ └─┬─┘ ░ ├───────────────────────┤
+        q_1: |0>──────────────────────────┤ X ├┤ U3(thetas[0][1]],0,0) ├───■───░─┤ U3(thetas[1][1]],0,0) ├
+                                          └───┘└───────────────────────┘       ░ └───────────────────────┘
+         c_0: 0 ════════════════════════════════════════════════════
+                                                                    
+         c_1: 0 ════════════════════════════════════════════════════
+         
+         Where U3(x,y,z) is the general unitary described in
+         https://community.qiskit.org/textbook/ch-gates/quantum-gates.html
+         
+         This circuit can be used to get any desired state using Q qbits, without
+         taking the intermediate phases into account.
+         
+         Args:
+            thetas: array of form size (Q, 2) composed by all the theta parameters
+                    needed for the circuit.
+            Q: Number of qubits the circuit is going to have.
+            
+         Returns:
+            circuit: QuantumCircuit according to the given arguments
+         
+    """
+    
     circuit = QuantumCircuit(Q, Q)
 
-    # ENTANGLEMENT PHASE POR ALGUNA RAZON SI THETAS NO ES UN ARRAY DE NUMPY ESTO DA ERROR POR
-    for i in range(Q):  # NO SE INTEGER INDICES
+    for i in range(Q):
         circuit.u3(thetas[i][0], 0, 0, i)
         if i != Q - 1:
             circuit.cx(i, i + 1)
@@ -107,6 +134,15 @@ def state_maker_Q(thetas, Q=2):
 
 
 def get_ensemble_Q(thetas, Q=2, T=1024):
+    """
+     This function performs a simulation with T shots and Q qbits. It's the parametrizable
+     qbit version of get_ensemble().
+    Args:
+        thetas: array of form size (Q, 2) composed by all the theta parameters
+                needed for the circuit.
+        Q: Integer number of qubits the circuit is going to have.
+        T: Integer number of shots that are going to take place in the simulation.
+    """
     circuit = state_maker_Q(thetas, Q)
 
     for i in range(Q):
