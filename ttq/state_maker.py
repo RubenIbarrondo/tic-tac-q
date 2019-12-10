@@ -87,32 +87,32 @@ def get_ensemble(theta0, theta1, theta2, N=1024):
 
 
 def state_maker_Q(thetas, Q=2):
-        """
-        Creates the circuit:
-        
-                ┌────────────────────────┐                               ┌───┐ ░ ┌───────────────────────┐
-        q_0: |0>┤ U3(thetas[0][0]]],0,0) ├──■────────────────────────────┤ X ├─░─┤ U3(thetas[1][0]],0,0) ├
-                └────────────────────────┘┌─┴─┐┌───────────────────────┐ └─┬─┘ ░ ├───────────────────────┤
-        q_1: |0>──────────────────────────┤ X ├┤ U3(thetas[0][1]],0,0) ├───■───░─┤ U3(thetas[1][1]],0,0) ├
-                                          └───┘└───────────────────────┘       ░ └───────────────────────┘
-         c_0: 0 ════════════════════════════════════════════════════
-                                                                    
-         c_1: 0 ════════════════════════════════════════════════════
-         
-         Where U3(x,y,z) is the general unitary described in
-         https://community.qiskit.org/textbook/ch-gates/quantum-gates.html
-         
-         This circuit can be used to get any desired state using Q qbits, without
-         taking the intermediate phases into account.
-         
-         Args:
-            thetas: array of form size (Q, 2) composed by all the theta parameters
-                    needed for the circuit.
-            Q: Number of qubits the circuit is going to have.
-            
-         Returns:
-            circuit: QuantumCircuit according to the given arguments
-         
+    """
+    Creates the circuit:
+
+            ┌────────────────────────┐                               ┌───┐ ░ ┌───────────────────────┐
+    q_0: |0>┤ U3(thetas[0][0]]],0,0) ├──■────────────────────────────┤ X ├─░─┤ U3(thetas[1][0]],0,0) ├
+            └────────────────────────┘┌─┴─┐┌───────────────────────┐ └─┬─┘ ░ ├───────────────────────┤
+    q_1: |0>──────────────────────────┤ X ├┤ U3(thetas[0][1]],0,0) ├───■───░─┤ U3(thetas[1][1]],0,0) ├
+                                      └───┘└───────────────────────┘       ░ └───────────────────────┘
+     c_0: 0 ════════════════════════════════════════════════════
+
+     c_1: 0 ════════════════════════════════════════════════════
+
+     Where U3(x,y,z) is the general unitary described in
+     https://community.qiskit.org/textbook/ch-gates/quantum-gates.html
+
+     This circuit can be used to get any desired state using Q qbits, without
+     taking the intermediate phases into account.
+
+     Args:
+        thetas: array of form size (Q, 2) composed by all the theta parameters
+                needed for the circuit.
+        Q: Number of qubits the circuit is going to have.
+
+     Returns:
+        circuit: QuantumCircuit according to the given arguments
+
     """
     
     circuit = QuantumCircuit(Q, Q)

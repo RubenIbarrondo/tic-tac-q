@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 from itertools import product
 from json import dumps
 from math import ceil, log
@@ -57,17 +56,19 @@ def state_maker_wrapper(params, conf):
     Wrapper to enable optimization of state_maker.get_ensemble.
     It aggregates the error instead of returning the error of each state individually.
     """
+    # Print and increase attempt numbers for debugging
     if DEBUG:
         global ATTEMPT_N
         if ATTEMPT_N % 10 == 0:
             print('\rAttempt number: {}'.format(ATTEMPT_N), end='')
         ATTEMPT_N += 1
 
+    # extract required values from configuration dictionary
     expected_values = conf.get('expected_values')
     n = conf.get('n_states')
     q = conf.get('q')
 
-    size = len(expected_values)
+    # use circuits to get board counts
     counts = state_maker.get_ensemble_Q(
         *[group_params(params)], **{'Q': q, 'T': n}
     )
@@ -75,10 +76,12 @@ def state_maker_wrapper(params, conf):
     # generator of binary strings
     binary_states = [x for x in map(''.join, product('01', repeat=q))]
 
-    # initialize array with values of er
+    # initialize array with values of errors
+    size = len(expected_values)
     count_values = np.zeros(size)
 
     # get keys of counts ('000', '001', ...)
+    # if key is present, use proportion of existing count
     count_keys = sorted(counts.keys())
     for i in range(size):
         k = binary_states[i]
@@ -88,9 +91,13 @@ def state_maker_wrapper(params, conf):
 
     # absolute value of each error
     err_array = np.subtract(expected_values, count_values)
+    # convert errors to absolute values
     err_array = np.absolute(err_array)
 
-    # sum of all values
+    if DEBUG:
+        print()
+
+    # cumulative error
     return np.sum(err_array)
 
 
@@ -117,23 +124,33 @@ def optimize(conf):
     }
     @return [<optimal_values>]
     """
+
+    # extract required values from configuration dictionary
     bound = conf.get('bound')
     max_iter = conf.get('max_iter')
     step = conf.get('step')
     x0 = conf.get('x0')
 
+    # generate bounds for all theta values
     bounds = tuple((
         (bound[0], bound[1]) for _ in range(len(x0))
     ))
 
+    # define constraints
     const = [{
         'type': 'ineq',
         'fun': constraint,
         'args': [conf]
     }]
+
+    # configure options
     options = {'eps': step}
+
+    # if max_iter is None, use default value
     if max_iter is not None:
         options['maxiter'] = int(max_iter)
+
+    # call minimize function
     sol = minimize(state_maker_wrapper,
                    x0,
                    method='SLSQP',
@@ -145,6 +162,9 @@ def optimize(conf):
 
 
 def gen_boards():
+    """
+    Generate probabilities for each winning game
+    """
     solution = data_gen.gen_boards()
     solution_str = sorted([data_gen.board_to_str(board) for board in solution])
     # winning games
@@ -160,14 +180,24 @@ def gen_boards():
 
 
 def ideal_values():
+    """
+    Create numpy array from probabilities of all possible games
+    """
     ideal = gen_boards()
     ideal = np.asarray(list(ideal.values()))
     return ideal
 
 
 def calc_q(expected_values):
+    """
+    Obtain the value of Q based on the amount of ideal or expected values
+    """
     return ceil(log(len(expected_values), 2))
 
+
+#
+# INITIALIZATION OF GENERAL USE VARIABLES
+#
 
 _expected_values = ideal_values()
 _q = calc_q(_expected_values)
@@ -175,37 +205,37 @@ _q = calc_q(_expected_values)
 CONF_TEMPLATE = {
         'bound': [0, 2 * np.pi],
         'expected_values': _expected_values,
-        'max_error': 0.005,
-        'max_iter': None,
+        'max_error': 0.002,
+        'max_iter': 1e6,
         'n_states': 1024,
         'q': _q,
-        'step': 0.1,
+        'step': 0.4,
         'x0': [1] * (_q * 2)
 }
 
 
+# main program
 if __name__ == '__main__':
+    # enable printing attempt numbers
     DEBUG = True
-    fn = 3
-    while True:
-        # configure optimization parameters
-        conf = dict(CONF_TEMPLATE)
-        conf['max_error'] = 0.2
-        # run configuration
-        opt_values = optimize(conf)
-        result = state_maker.get_ensemble_Q(
-            thetas=group_params(opt_values),
-            Q=_q,
-            T=1024
-        )
-        output = {
-            'thetas': list(opt_values),
-            'results': result
-        }
-        with open('out/result_{}.txt'.format(fn), 'w') as f:
-            f.write(dumps(output, indent=4))
-        fn += 1
-        print()
-        print(f'Finished {fn}')
-        ATTEMPT_N = 0
-        sleep(15)
+
+    # configure optimization parameters
+    conf = dict(CONF_TEMPLATE)
+    conf['max_error'] = 0.05
+
+    # run parametrization optimization
+    opt_values = optimize(conf)
+    # apply parameters to circuit
+    result = state_maker.get_ensemble_Q(
+        thetas=group_params(opt_values),
+        Q=_q,
+        T=1024
+    )
+    # prepare obtained data for serialization
+    output = {
+        'thetas': list(opt_values),
+        'results': result
+    }
+    # serialize and write obtained data
+    with open('out/result.txt', 'w') as f:
+        f.write(dumps(output, indent=4))

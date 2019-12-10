@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+"""
+Util file to generate training sets. The following sets are created:
+unfiltered winning games, distinct winning games, losing games
+"""
+
 from itertools import permutations, product
 from os import makedirs
 from os.path import join

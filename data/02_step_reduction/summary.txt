@@ -1,0 +1,18 @@
+file: 'result_1.txt'
+	total: 1024 wins: 164 (16.015625%) loses: 860 (83.984375%)
+file: 'result_2.txt'
+	total: 1024 wins: 188 (18.359375%) loses: 836 (81.640625%)
+file: 'result_3.txt'
+	total: 1024 wins: 211 (20.60546875%) loses: 813 (79.39453125%)
+file: 'result_4.txt'
+	total: 1024 wins: 345 (33.69140625%) loses: 679 (66.30859375%)
+file: 'result_5.txt'
+	total: 1024 wins: 377 (36.81640625%) loses: 647 (63.18359375%)
+file: 'result_6.txt'
+	total: 1024 wins: 382 (37.3046875%) loses: 642 (62.6953125%)
+file: 'result_7.txt'
+	total: 1024 wins: 236 (23.046875%) loses: 788 (76.953125%)
+file: 'result_8.txt'
+	total: 1024 wins: 198 (19.3359375%) loses: 826 (80.6640625%)
+file: 'result_9.txt'
+	total: 1024 wins: 212 (20.703125%) loses: 812 (79.296875%)
