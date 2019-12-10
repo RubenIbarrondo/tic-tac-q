@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 
-from itertools import permutations
+from itertools import permutations, product
 from os import makedirs
 from os.path import join
 
 O, X = 0, 1
 
-DATA_DIR = 'out'
+DATA_DIR = '../data/out'
 
 SAMPLES = 6
 SOLUTION_FILE = 'training_set.txt'
 SOLUTION_FILE_DISTINCT = 'training_set_distinct.txt'
+SOLUTION_FILE_LOOSE = 'training_set_loose.txt'
 
 BOARDS = [
     # 1
@@ -48,6 +49,17 @@ BOARDS = [
 ]
 
 
+def gen_loosing_sets(winning_sets):
+    loosing_sets = []
+    gen = [x for x in map(''.join, product('01', repeat=9))]
+    for i in range(512):
+        board = gen[i]
+        print(board)
+        if board not in winning_sets:
+            loosing_sets.append(board)
+    return loosing_sets
+
+
 def board_to_str(board):
     return ''.join(['0' if x == O else '1' for x in board])
 
@@ -74,9 +86,9 @@ def gen_boards():
             for i in range(len(cells)):
                 b[empty_cells[i]] = p[i]
             n += 1
-            print('\rCreated {} solutions'.format(n), end='')
+            # print('\rCreated {} solutions'.format(n), end='')
             solution.append(b)
-    print()
+    # print()
     return solution
 
 
@@ -88,14 +100,21 @@ if __name__ == '__main__':
 
     # all solutions
     solution = gen_boards()
-    solution_str = [board_to_str(board) for board in solution]
+    solution_str = sorted([board_to_str(board) for board in solution])
     with open(join(DATA_DIR, SOLUTION_FILE), 'w') as f:
         for board in solution:
             f.write(board_to_str(board) + '\n')
 
     # unique solutions
-    clean = clean_set(solution_str)
+    clean = sorted(clean_set(solution_str))
     print("Distinct solutions: {}".format(len(clean)))
     with open(join(DATA_DIR, SOLUTION_FILE_DISTINCT), 'w') as f:
         for line in clean:
+            f.write(line + '\n')
+
+    # loosing sets
+    loosing_sets = sorted(gen_loosing_sets(clean))
+    print("Distinct loosing solutions: {}".format(len(loosing_sets)))
+    with open(join(DATA_DIR, SOLUTION_FILE_LOOSE), 'w') as f:
+        for line in loosing_sets:
             f.write(line + '\n')

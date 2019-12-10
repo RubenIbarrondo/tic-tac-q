@@ -2,7 +2,7 @@ from qiskit import QuantumCircuit, Aer, execute
 
 
 def state_maker(theta, ang0, ang1):
-    '''
+    """
         Creates the circuit:
         
                 ┌───────────────┐     ┌───────────┐
@@ -27,19 +27,19 @@ def state_maker(theta, ang0, ang1):
          Returns:
             circ: QuantumCircuit according to the given arguments
          
-    '''
+    """
     circ = QuantumCircuit(2, 2)
 
     circ.u3(theta, 0, 0, 0)
     circ.cx(0, 1)
     circ.u3(*ang1, 1)
     circ.u3(*ang0, 0)
-    
+
     return circ
 
 
 def get_ensemble(theta0, theta1, theta2, N=1024):
-    '''
+    """
         Simulates (qasm_simulator) the measures the output of the circuit:
          
                 ┌────────────────┐     ┌─────────────────┐┌─┐   
@@ -74,8 +74,7 @@ def get_ensemble(theta0, theta1, theta2, N=1024):
          Returns:
             counts: dict object with the states as keys and counts as values. e.g {'00': 621, '11': 403}
          
-    '''
-
+    """
     circuit = state_maker(theta0, [theta1, 0, 0], [theta2, 0, 0])
     
     circuit.measure(0,0)
@@ -84,4 +83,36 @@ def get_ensemble(theta0, theta1, theta2, N=1024):
     result = execute(circuit, backend=simulator, shots=N).result()
     counts = result.get_counts()
     
+    return counts
+
+
+def state_maker_Q(thetas, Q=2):
+    circuit = QuantumCircuit(Q, Q)
+
+    # ENTANGLEMENT PHASE POR ALGUNA RAZON SI THETAS NO ES UN ARRAY DE NUMPY ESTO DA ERROR POR
+    for i in range(Q):  # NO SE INTEGER INDICES
+        circuit.u3(thetas[i][0], 0, 0, i)
+        if i != Q - 1:
+            circuit.cx(i, i + 1)
+        else:
+            circuit.cx(i, 0)
+
+    circuit.barrier()
+
+    # STATE TUNING PHASE
+    for i in range(Q):
+        circuit.u3(thetas[i][1], 0, 0, i)
+
+    return circuit
+
+
+def get_ensemble_Q(thetas, Q=2, T=1024):
+    circuit = state_maker_Q(thetas, Q)
+
+    for i in range(Q):
+        circuit.measure(i, i)
+
+    simulator = Aer.get_backend('qasm_simulator')
+    result = execute(circuit, backend=simulator, shots=T).result()
+    counts = result.get_counts()
     return counts
