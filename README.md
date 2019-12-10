@@ -1,5 +1,6 @@
 # Tic Tac Q
-Inferring the rules of Tic-Tac-Toe with a Quantum Born Machine (Issue \#17)
+
+Inferring the rules of Tic-Tac-Toe with a Quantum Born Machine (Issue \#17).
 
 ## Objective
 
@@ -34,11 +35,16 @@ We wanted do create a Quantum Born Machine that generated winning Tic-Tac-Toe ga
 ### What we actually did
 
 We developed a 9 qubit circuit optimized with an scalable algorithm to replicate our desired behaviour.
+The win ratios shown in the presentation take into account that illegal games the circuit considered
+as won are actually a wrong game.
+
+An optimization with random parameters gave a result slightly better than a random configuration while
+a correctly parametrized optimization gives much better results. See presentation page 16.
 
 ### Where do those defer and what we would like to improve
  
 We only took for won games complete games where 5 `X` and 4 `O` where used, meaning
-we left no room for blank cells.
+we left no room for blank cells and illegal games where discarded as invalid games.
 
 We would like to:
 
@@ -47,6 +53,7 @@ We would like to:
 * Add the possibility of a state being blank.
 
 * Experiment with results obtained from smaller training sets.
+
 
 ## Abstract
 Quantum Circuit Born Machines (QCBM) are quantum circuits with tunable parameters.
