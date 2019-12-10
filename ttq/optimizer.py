@@ -12,6 +12,7 @@ from ttq import gen_dataset as data_gen
 from ttq import state_maker
 
 ATTEMPT_N = 0
+DEBUG = False
 
 
 def gen_expected_values_1(n):
@@ -56,10 +57,11 @@ def state_maker_wrapper(params, conf):
     Wrapper to enable optimization of state_maker.get_ensemble.
     It aggregates the error instead of returning the error of each state individually.
     """
-    global ATTEMPT_N
-    if ATTEMPT_N % 10 == 0:
-        print('\rAttempt number: {}'.format(ATTEMPT_N), end='')
-    ATTEMPT_N += 1
+    if DEBUG:
+        global ATTEMPT_N
+        if ATTEMPT_N % 10 == 0:
+            print('\rAttempt number: {}'.format(ATTEMPT_N), end='')
+        ATTEMPT_N += 1
 
     expected_values = conf.get('expected_values')
     n = conf.get('n_states')
@@ -178,21 +180,22 @@ CONF_TEMPLATE = {
         'n_states': 1024,
         'q': _q,
         'step': 0.1,
-        'x0': [1] * (_q * 2)  # 1 * q
+        'x0': [1] * (_q * 2)
 }
 
 
 if __name__ == '__main__':
-
+    DEBUG = True
     fn = 3
     while True:
         # configure optimization parameters
         conf = dict(CONF_TEMPLATE)
+        conf['max_error'] = 0.2
         # run configuration
         opt_values = optimize(conf)
         result = state_maker.get_ensemble_Q(
             thetas=group_params(opt_values),
-            Q=q,
+            Q=_q,
             T=1024
         )
         output = {
