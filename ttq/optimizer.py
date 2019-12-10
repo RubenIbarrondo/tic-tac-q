@@ -164,7 +164,7 @@ def ideal_values():
 
 
 def calc_q(expected_values):
-    return ceil(log(len(conf['expected_values']), 2))
+    return ceil(log(len(expected_values), 2))
 
 
 _expected_values = ideal_values()
