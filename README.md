@@ -1,17 +1,52 @@
-# tic-tac-q
+# Tic Tac Q
 Inferring the rules of Tic-Tac-Toe with a Quantum Born Machine (Issue \#17)
 
-##
+## Objective
 
-
+We went for the `deep-learning` objective.
 
 ## Deliverable
 
-* The presentation can be found at the root folder in
-pdf
-format or in the media folder in
-pptx
-format.
+* The presentation can be found in the media folder in both
+[pptx](https://github.com/mikelsr/tic-tac-q/blob/master/media/Tic-Tac-Q_Presentation.pptx)
+and
+[pdf](https://github.com/mikelsr/tic-tac-q/blob/master/media/Tic-Tac-Q_Presentation.pdf)
+formats.
+
+* Code can be found at the [ttq](https://github.com/mikelsr/tic-tac-q/tree/master/ttq)
+module folder.
+
+* Some of the generated data can be found at the
+[data](https://github.com/mikelsr/tic-tac-q/tree/master/data)
+directory.
+
+* Some Jupyter Notebooks are available in the root directory.
+
+* There are additional development components in
+[test_doc](https://github.com/mikelsr/tic-tac-q/tree/master/test_doc).
+
+## Summary
+
+### What we set to do
+
+We wanted do create a Quantum Born Machine that generated winning Tic-Tac-Toe games based on a training set.
+
+### What we actually did
+
+We developed a 9 qubit circuit optimized with an scalable algorithm to replicate our desired behaviour.
+
+### Where do those defer and what we would like to improve
+ 
+We only took for won games complete games where 5 `X` and 4 `O` where used, meaning
+we left no room for blank cells.
+
+We would like to:
+
+* Improve the parametrization to obtain better results.
+
+* Add the possibility of a state being blank.
+
+* Experiment with results obtained from smaller training sets.
 
 ## Abstract
 Quantum Circuit Born Machines (QCBM) are quantum circuits with tunable parameters.
