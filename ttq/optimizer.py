@@ -13,35 +13,6 @@ from ttq import state_maker
 
 ATTEMPT_N = 0
 
-# single values params
-_MAX_ERROR = 0.05
-_N = 1024
-_PARAMS = 4
-_STEP = 0.1
-# _X0 = [1] * _PARAMS
-_X0 = [0.0, 0.5, 1.0, 1.5]
-
-# multiple value params
-_EXPECTED_VALUES = {
-    '00': 0.5,
-    '01': 0.2,
-    '10': 0.2,
-    '11': 0.1
-}
-
-CONF_TEMPLATE = {
-        'bound': [0, 2 * np.pi],
-        'expected_values': [
-            np.array([0.5, 0.2, 0.2, 0.1])
-        ],
-        'max_error': _MAX_ERROR,
-        'max_iter': None,
-        'n_states': _N,
-        'q': 2,
-        'step': _STEP,
-        'x0': _X0
-}
-
 
 def gen_expected_values_1(n):
     """
@@ -186,22 +157,37 @@ def gen_boards():
     return probabilities
 
 
-if __name__ == '__main__':
-    # generate probabilities
-    expected_values = gen_boards()
-    expected_values = np.asarray(list(expected_values.values()))
+def ideal_values():
+    ideal = gen_boards()
+    ideal = np.asarray(list(ideal.values()))
+    return ideal
 
-    fn = 1
+
+def calc_q(expected_values):
+    return ceil(log(len(conf['expected_values']), 2))
+
+
+_expected_values = ideal_values()
+_q = calc_q(_expected_values)
+
+CONF_TEMPLATE = {
+        'bound': [0, 2 * np.pi],
+        'expected_values': _expected_values,
+        'max_error': 0.005,
+        'max_iter': None,
+        'n_states': 1024,
+        'q': _q,
+        'step': 0.1,
+        'x0': [1] * (_q * 2)  # 1 * q
+}
+
+
+if __name__ == '__main__':
+
+    fn = 3
     while True:
         # configure optimization parameters
         conf = dict(CONF_TEMPLATE)
-        conf['expected_values'] = expected_values
-        conf['max_iter'] = 30
-        conf['max_error'] = 0.02
-        # obtain q values
-        q = ceil(log(len(expected_values), 2))
-        conf['q'] = q
-        conf['x0'] = [0.3 * fn] * (q * 2)
         # run configuration
         opt_values = optimize(conf)
         result = state_maker.get_ensemble_Q(
@@ -220,4 +206,3 @@ if __name__ == '__main__':
         print(f'Finished {fn}')
         ATTEMPT_N = 0
         sleep(15)
-
