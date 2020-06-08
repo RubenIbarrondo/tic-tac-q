@@ -2,6 +2,14 @@
 
 Inferring the rules of Tic-Tac-Toe with a Quantum Born Machine ([Issue \#17](https://github.com/qiskit-community/qiskit-hackathon-bilbao-19/issues/17)).
 
+## Authors
+
+* Ivan Álvarez [![alt text][octocat]](https://github.com/IvanA257)
+* Amaia Goñi [![alt text][octocat]](https://github.com/amaiagoni)
+* Rubén Ibarrondo [![alt text][octocat]](https://github.com/RubenIbarrondo)
+* Ane Infante [![alt text][octocat]](https://github.com/aneinfante)
+* Mikel Solabarrieta [![alt text][octocat]](https://github.com/mikelsr)
+
 ## Objective
 
 We went for the `deep-learning` objective.
@@ -42,7 +50,7 @@ An optimization with random parameters gave a result slightly better than a rand
 a correctly parametrized optimization gives much better results. See presentation page 16.
 
 ### Where do those defer and what we would like to improve
- 
+
 We only took for won games complete games where 5 `X` and 4 `O` where used, meaning
 we left no room for blank cells and illegal games where discarded as invalid games.
 
@@ -89,3 +97,6 @@ Where the unitary transformations are described as
 <img src="https://github.com/mikelsr/tic-tac-q/blob/master/media/img/U3_thetaj.png" width="200"/>
 
 the parameters of those gates are the ones to be tuned by our optimization algorithm.
+
+
+[octocat]: http://i.imgur.com/9I6NRUm.png (GitHub icon)
